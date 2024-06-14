@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class MasterSlaveServersRedissonConfig {
 
-    @Bean("redissonClient")
+//    @Bean("redissonClient")
     public RedissonClient redissonClient() {
 
         Config config = new Config();

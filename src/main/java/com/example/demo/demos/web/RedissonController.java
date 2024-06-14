@@ -6,7 +6,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
 import com.alibaba.fastjson2.JSON;
@@ -18,19 +20,20 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class RedissonController {
     @Autowired
-    private RedissonClient redissonClient;
+    @Qualifier(value="redissonSentinelClient")
+    private RedissonClient redissonSentinelClient;
     @Autowired
-    private StringRedisTemplate stringRedisTemplate;
+    private RedisTemplate redisTemplate;
 
     @GetMapping("/get/{hashEntryKey}")
     @ResponseBody
     public String get(@PathVariable("hashEntryKey") Object hashEntryKey) {
-        HashOperations<String, String, String> hashOperations = stringRedisTemplate.opsForHash();
+        HashOperations<String, String, String> hashOperations = redisTemplate.opsForHash();
         String value = hashOperations.get("BUS_HS", String.valueOf(hashEntryKey));
 
         if (StringUtils.isNotBlank(value)) {
             String lockKey = "lock_key_001";
-            RLock lock = redissonClient.getLock(lockKey);
+            RLock lock = redissonSentinelClient.getLock(lockKey);
             try {
                 boolean res = lock.tryLock(10, TimeUnit.SECONDS);
                 if (res) {
@@ -59,12 +62,12 @@ public class RedissonController {
     @GetMapping("/set")
     @ResponseBody
     public String set(@RequestParam("hashEntryKey") String hashEntryKey,@RequestParam("hashEntryValue") String hashEntryValue) {
-        HashOperations<String, String, String> hashOperations = stringRedisTemplate.opsForHash();
+        HashOperations<String, String, String> hashOperations = redisTemplate.opsForHash();
         String cacheKey = "BUS_HS";
         String cacheValue = hashOperations.get(cacheKey, String.valueOf(hashEntryKey));
 
         String lockKey = "lock_key_001";
-        RLock lock = redissonClient.getLock(lockKey);
+        RLock lock = redissonSentinelClient.getLock(lockKey);
 
         try {
 
