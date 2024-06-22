@@ -20,8 +20,8 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class RedissonController {
     @Autowired
-    @Qualifier(value="redissonSentinelClient")
-    private RedissonClient redissonSentinelClient;
+    @Qualifier(value="redissonClient")
+    private RedissonClient redissonClient;
     @Autowired
     private RedisTemplate redisTemplate;
 
@@ -33,7 +33,7 @@ public class RedissonController {
 
         if (StringUtils.isNotBlank(value)) {
             String lockKey = "lock_key_001";
-            RLock lock = redissonSentinelClient.getLock(lockKey);
+            RLock lock = redissonClient.getLock(lockKey);
             try {
                 boolean res = lock.tryLock(10, TimeUnit.SECONDS);
                 if (res) {
@@ -67,7 +67,7 @@ public class RedissonController {
         String cacheValue = hashOperations.get(cacheKey, String.valueOf(hashEntryKey));
 
         String lockKey = "lock_key_001";
-        RLock lock = redissonSentinelClient.getLock(lockKey);
+        RLock lock = redissonClient.getLock(lockKey);
 
         try {
 

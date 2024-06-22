@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 /**
  * 主从配置
  */
-@Configuration
+//@Configuration
 public class MasterSlaveServersRedissonConfig {
 
 //    @Bean("redissonClient")

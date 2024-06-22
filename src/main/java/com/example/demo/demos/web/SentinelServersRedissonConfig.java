@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 /**
  * sentinel master slave config
  */
-@Configuration
+//@Configuration
 public class SentinelServersRedissonConfig {
 
     @Bean("redissonSentinelClient")

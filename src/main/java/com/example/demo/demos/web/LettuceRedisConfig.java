@@ -27,7 +27,7 @@ import java.util.List;
 /**
  * springboot lettuce集成redis
  */
-@Configuration
+//@Configuration
 public class LettuceRedisConfig {
     @Value("${spring.redis.sentinel.master}")
     private String masterName;
@@ -134,30 +134,4 @@ public class LettuceRedisConfig {
         return redisTemplate;
     }
 
-//    @Bean("lettuceConnectionFactory")
-//    public RedisConnectionFactory lettuceConnectionFactory(RedisProperties redisProperties) {
-//
-//        // 读取sentinel配置
-//        String masterName = redisProperties.getSentinel().getMaster();
-//        List<String> sentinelNodeList = redisProperties.getSentinel().getNodes();
-//        RedisSentinelConfiguration sentinelConfiguration = new RedisSentinelConfiguration(masterName, new HashSet<>(sentinelNodeList));
-//
-//        // 设置节点和哨兵访问密码
-//        sentinelConfiguration.setPassword(redisProperties.getPassword());
-//        sentinelConfiguration.setSentinelPassword(redisProperties.getPassword());
-//
-//        // lettuce client配置，在进行读取时，访问任意一个节点，默认读写都只从主节点进行
-//        LettucePoolingClientConfiguration clientConfig = LettucePoolingClientConfiguration
-//                .builder().readFrom(ReadFrom.ANY).build();
-//
-//        LettuceConnectionFactory factory = new LettuceConnectionFactory(sentinelConfiguration, clientConfig);
-//        // 在获取连接时，先验证连接是否已经中断，如果已经中断则创建一个新的连接
-//        factory.setValidateConnection(true);
-//        return factory;
-//    }
-
-//    @Bean
-//    public StringRedisTemplate stringRedisTemplate(LettuceConnectionFactory connectionFactory) {
-//        return new StringRedisTemplate(connectionFactory);
-//    }
 }
